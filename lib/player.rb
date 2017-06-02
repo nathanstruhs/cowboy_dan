@@ -1,7 +1,7 @@
 class Player
   attr_accessor :x, :y, :health
 
-  def initialize(map, x, y, wild_dog)
+  def initialize(map, x, y, wild_dogs, bear, cacti, hatchdoor)
     @x, @y = x, y
     @direction = :right
     @vertical_velocity = 0;
@@ -9,8 +9,12 @@ class Player
     @current_image = @standing_1
     @map = map
     @jump_sound = Gosu::Sample.new "../assets/fixtures/jump.mp3"
-    @wild_dog = wild_dog
+    @yeow = Gosu::Sample.new "../assets/fixtures/yeow.mp3"
+    @wild_dogs = wild_dogs
     @health = 100
+    @bear = bear
+    @cacti = cacti
+    @hatchdoor = hatchdoor
   end
 
   def draw
@@ -21,7 +25,7 @@ class Player
       offset_x = 35
       factor = -1.0
     end
-    @current_image.draw(@x + offset_x, @y - 73, 0, factor, 1.0)
+    @current_image.draw(@x + offset_x, @y - 73, 50, factor, 1.0)
   end
 
   def would_fit(offset_x, offset_y)
@@ -37,11 +41,33 @@ class Player
   end
 
   def doggy_collision
-    if @x.between?(@wild_dog.x_dog - 30, @wild_dog.x_dog + 30) && @y.between?(@wild_dog.y_dog - 30, @wild_dog.y_dog + 30)
-      @current_image = @hurt
-      @jump_sound.play(0.2, 1.1, false)
-      @health = @health - 1
+    @wild_dogs.each do |dog|
+      if @x.between?(dog.x_dog - 30, dog.x_dog + 30) && @y.between?(dog.y_dog - 30, dog.y_dog + 30)
+        @current_image = @hurt
+        @yeow.play(0.4, 1.1, false)
+        @health = @health - 5
+        @vertical_velocity = -10
+      end
     end
+  end
+
+  def cacti_collision
+    @cacti.each do |cactus|
+      if @x.between?(cactus.x - 10, cactus.x + 70) && @y.between?(cactus.y - 10, cactus.y + 80)
+        @current_image = @hurt
+        @yeow.play(0.4, 1.1, false)
+        @health = @health - 5
+        @vertical_velocity = -10
+      end
+    end
+  end
+
+  def near_bear?
+    if @x.between?(@bear.x - 100, @bear.x + 20) && @y.between?(@bear.y - 30, @bear.y + 30) then return true end
+  end
+
+  def near_hatchdoor?
+    if @x.between?(@hatchdoor.x - 100, @hatchdoor.x + 100) && @y.between?(@hatchdoor.y - 100, @hatchdoor.y + 100) then return true end
   end
 
   def update move_x

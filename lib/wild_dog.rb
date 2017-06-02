@@ -1,5 +1,5 @@
 class WildDog
-  attr_reader :x_dog, :y_dog
+  attr_accessor :x_dog, :y_dog
 
   def initialize x, y
     @standing, @walk_1, @walk_2 = *Gosu::Image.load_tiles("../assets/images/sprites/wild_dog.png", 40, 20)
