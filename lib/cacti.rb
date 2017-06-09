@@ -10,7 +10,4 @@ class Cacti
   def draw
     @image.draw(@x, @y, 1, 1)
   end
-
-  def update
-  end
 end

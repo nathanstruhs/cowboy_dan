@@ -12,9 +12,6 @@ class Hatchdoor
     @current_image.draw(@x, @y, 1, 1)
   end
 
-  def update
-  end
-
   def is_stinkin(counter)
     counter = counter % 48
     if counter.between?(0,16)

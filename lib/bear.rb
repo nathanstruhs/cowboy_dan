@@ -28,8 +28,4 @@ class Bear
       @current_image = @standing_1
     end
   end
-
-
-  def update
-  end
 end
